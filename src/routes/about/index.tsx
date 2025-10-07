@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/about/')({
   component: AboutPage,
@@ -6,11 +6,11 @@ export const Route = createFileRoute('/about/')({
 
 function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-4 pb-8 border-b border-stone-200">
-        <h1 className="text-4xl font-bold text-stone-800">About Me</h1>
-        <p className="text-lg text-stone-600">
-          Just a beginner learning leathercraft and sharing the ride
+    <div className="max-w-4xl mx-auto space-y-12">
+      <div className="text-center space-y-6 pb-12 pt-4 border-b-2 border-stone-800/20">
+        <h1 className="text-4xl font-bold text-stone-800 tracking-tight">About Me</h1>
+        <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
+          Just a beginner learning leathercraft and sharing the ride.
         </p>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -95,22 +95,22 @@ function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-stone-800 text-white rounded-lg p-8 text-center space-y-4">
-        <h3 className="text-2xl font-semibold">Check Out My Progress</h3>
-        <p className="text-stone-200">
+      <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4">
+        <h3 className="text-3xl font-bold">Check Out My Progress</h3>
+        <p className="text-stone-300 text-lg max-w-2xl mx-auto">
           Take a look at my recent projects and the tools I'm using to make them!
         </p>
         <div className="flex gap-4 justify-center pt-4">
-          <a
-            href="/projects"
+          <Link
+            to="/projects"
             className="px-6 py-3 bg-white text-stone-800 rounded-md hover:bg-stone-100 transition font-medium">
             View Projects
-          </a>
-          <a
-            href="/tools"
+          </Link>
+          <Link
+            to="/tools"
             className="px-6 py-3 bg-stone-700 text-white rounded-md hover:bg-stone-600 transition font-medium">
             See Tools
-          </a>
+          </Link>
         </div>
       </div>
     </div>

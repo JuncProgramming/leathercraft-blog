@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/tools/')({
   component: ToolsPage,
@@ -107,11 +107,11 @@ function ToolsPage() {
           about anything!
         </p>
         <div className="pt-4">
-          <a
-            href="/about"
+          <Link
+            to="/about"
             className="inline-block px-8 py-3 bg-white text-stone-800 rounded-md hover:bg-stone-100 transition font-semibold">
             Get In Touch
-          </a>
+          </Link>
         </div>
       </div>
     </div>
