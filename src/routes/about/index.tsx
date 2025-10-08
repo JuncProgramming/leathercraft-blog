@@ -27,7 +27,7 @@ function AboutPage() {
         </div>
 
         <div className="md:w-2/3 space-y-4">
-          <h2 className="text-3xl font-semibold text-stone-800">Oliwier</h2>
+          <h2 className="text-3xl font-bold text-stone-800">Oliwier</h2>
           <p className="text-stone-600 leading-relaxed">
             Hey! I'm just starting out with leathercraft - still figuring things
             out, making plenty of mistakes, and having a lot of fun along the
@@ -43,9 +43,9 @@ function AboutPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 pt-8">
+      <div className="grid md:grid-cols-2 gap-8">
         <div className="bg-stone-50 p-6 rounded-lg border border-stone-200">
-          <h3 className="text-2xl font-semibold text-stone-800 mb-4">
+          <h3 className="text-xl font-bold text-stone-800 mb-4">
             What I'm Working On
           </h3>
           <ul className="space-y-2">
@@ -69,7 +69,7 @@ function AboutPage() {
         </div>
 
         <div className="bg-stone-50 p-6 rounded-lg border border-stone-200">
-          <h3 className="text-2xl font-semibold text-stone-800 mb-4">
+          <h3 className="text-xl font-bold text-stone-800 mb-4">
             Contact
           </h3>
           <div className="space-y-3">

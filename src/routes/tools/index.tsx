@@ -87,7 +87,7 @@ function ToolsPage() {
                 </p>
               </div>
 
-              <div className="pt-6">
+              <div className="pt-4">
                 <a
                   href={tool.link || '#'}
                   target="_blank"
@@ -100,17 +100,19 @@ function ToolsPage() {
           </div>
         ))}
       </div>
-      <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4 mt-16">
-        <h2 className="text-3xl font-bold">Got questions about these tools?</h2>
+      <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4 mt-12">
+        <h2 className="text-3xl font-bold">
+          Want to See These Tools in Action?
+        </h2>
         <p className="text-stone-300 text-lg max-w-2xl mx-auto">
-          I'm still learning, but happy to share what I know. Feel free to ask
-          about anything!
+          Check out my leathercraft projects to see how I use these tools and
+          what I've made with them.
         </p>
         <div className="pt-4">
           <Link
             to="/about"
             className="inline-block px-8 py-3 bg-white text-stone-800 rounded-md hover:bg-stone-100 transition font-semibold">
-            Get In Touch
+            View Projects
           </Link>
         </div>
       </div>
