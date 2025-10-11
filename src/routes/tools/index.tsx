@@ -1,3 +1,4 @@
+import type { Tool } from '@/types';
 import { createFileRoute, Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/tools/')({
@@ -5,9 +6,9 @@ export const Route = createFileRoute('/tools/')({
 });
 
 function ToolsPage() {
-  const tools = [
+  const tools: Tool[] = [
     {
-      id: 1,
+      id: '1',
       name: 'SDI 3005C Aluminum Diecast Grip Cutter',
       description:
         'Surprisingly affordable, super sharp, and has a nice weight - great for clean, precise cuts.',
@@ -15,7 +16,7 @@ function ToolsPage() {
       imageUrl: '/images/tools/knife.png',
     },
     {
-      id: 2,
+      id: '2',
       name: 'Anti-slip 30cm Metal Ruler',
       description:
         "Any good metal ruler will work - just make sure it's long enough and has a cork backing so it doesn't slip.",
@@ -23,7 +24,7 @@ function ToolsPage() {
       imageUrl: '/images/tools/ruler.png',
     },
     {
-      id: 3,
+      id: '3',
       name: 'A3 Cutting Mat',
       description:
         "You don't need this exact one, but go for a large, self-healing mat to protect your workspace and blades.",
@@ -31,7 +32,7 @@ function ToolsPage() {
       imageUrl: '/images/tools/cutting-mat.png',
     },
     {
-      id: 4,
+      id: '4',
       name: 'Seiwa Tokonole Leather Burnishing Gum',
       description:
         'One of the best edge burnishing products out there - gives leather a smooth, professional finish.',
@@ -39,7 +40,7 @@ function ToolsPage() {
       imageUrl: '/images/tools/burnishing-gum.png',
     },
     {
-      id: 5,
+      id: '5',
       name: 'Seiwa Leather Adhesive',
       description:
         'Strong, easy to use, and dries clear - honestly one of the best glues for leathercraft.',
