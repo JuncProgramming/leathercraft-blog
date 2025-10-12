@@ -1,64 +1,23 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { projectsAPI } from '@/services/api';
 
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPage,
 });
 
 function ProjectsPage() {
-  const projects = [
-    {
-      id: '1',
-      title: 'Belt',
-      description:
-        'Classic beltasddddddddddddddddddddddddddddddddddddddddd ddddddddddddddddddddddddddddddddddddddd dddddddddddddddddd dddsa dddddddddddddddddddddddddddddddddddddddddddddddddddd dddassssssssssssssssssdd',
-      date: '12-04-2004',
-      imageUrl: '',
-      category: 'Wallets',
-    },
-    {
-      id: '2',
-      title: '',
-      description: '',
-      date: '',
-      imageUrl: '',
-      category: 'Bags',
-    },
-    {
-      id: '3',
-      title: '',
-      description: '',
-      date: '',
-      imageUrl: '',
-      category: 'Belts',
-    },
-    {
-      id: '4',
-      title: '',
-      description: '',
-      date: '',
-      imageUrl: '',
-      category: 'Accessories',
-    },
-    {
-      id: '5',
-      title: '',
-      description: '',
-      date: '',
-      imageUrl: '',
-      category: 'Custom',
-    },
-    {
-      id: '6',
-      title: '',
-      description: '',
-      date: '',
-      imageUrl: '',
-      category: 'Wallets',
-    },
-  ];
-
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const {
+    data: projects = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['projects'],
+    queryFn: projectsAPI.getAll,
+  });
 
   const filteredProjects =
     selectedCategory === 'All' ? projects : (
@@ -105,9 +64,9 @@ function ProjectsPage() {
             key={project.id}
             className="group bg-white rounded-lg overflow-hidden hover:shadow transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
             <div className="aspect-video bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
-              {project.imageUrl ?
+              {project.mainImage ?
                 <img
-                  src={project.imageUrl}
+                  src={project.mainImage}
                   alt={project.title || 'Project image'}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
