@@ -1,53 +1,20 @@
-import type { Tool } from '@/types';
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { toolsAPI } from '@/services/api';
 
 export const Route = createFileRoute('/tools/')({
   component: ToolsPage,
 });
 
 function ToolsPage() {
-  const tools: Tool[] = [
-    {
-      id: '1',
-      name: 'SDI 3005C Aluminum Diecast Grip Cutter',
-      description:
-        'Surprisingly affordable, super sharp, and has a nice weight - great for clean, precise cuts.',
-      link: 'https://stationery.sdi.com.tw/en/catalog-detail/3005C/',
-      imageUrl: '/images/tools/knife.png',
-    },
-    {
-      id: '2',
-      name: 'Anti-slip 30cm Metal Ruler',
-      description:
-        "Any good metal ruler will work - just make sure it's long enough and has a cork backing so it doesn't slip.",
-      link: 'https://www.amazon.com/Stainless-Non-Slip-Centimeters-Straight-Drafting/dp/B0DSC9TF2R/ref=sr_1_4?crid=37UH9FUHPKCEV&dib=eyJ2IjoiMSJ9.wnzt1fYLPeb5Tca2iUMHQd6CJpqQKqNoBO0cDUabBolrOLeyqODk9015JFGs-MDRU85WR7lSFPvQv_zYyO9s7eBr6kM6sLPFJLQnP-SjF-Je3QUwOJwDGqsrTMV2F0CliL3JOfgLV2dymdQy45tL47XWeNCeqcK4ifhSUeaf8Q0Jx1GN4n7BOPN2kdtPfH8RmE-bL6-QZHQOMpjD6Y0CxuhvanEo_CsV0o9FanASUgMEtERDwVqFiwV1vbdNUuh4ZJpSk-y5YWXB3rfZyyioPiQdaWRWyLWQ2vbG6Ytnv5E.2kzH2akILuP3pVldZpmJch2WYLl1gViHqtm7mUW6esI&dib_tag=se&keywords=metal%2Bruler%2Bcork&qid=1759686336&sprefix=metal%2Bruler%2Bcork%2Caps%2C216&sr=8-4&th=1',
-      imageUrl: '/images/tools/ruler.png',
-    },
-    {
-      id: '3',
-      name: 'A3 Cutting Mat',
-      description:
-        "You don't need this exact one, but go for a large, self-healing mat to protect your workspace and blades.",
-      link: 'https://craft-point.com/sklep/mata-samogojaca-dwustronna-a3/',
-      imageUrl: '/images/tools/cutting-mat.png',
-    },
-    {
-      id: '4',
-      name: 'Seiwa Tokonole Leather Burnishing Gum',
-      description:
-        'One of the best edge burnishing products out there - gives leather a smooth, professional finish.',
-      link: 'https://www.amazon.com/Buckleguy-com-Tokonole-Leather-Burnishing-Choose/dp/B0DV4C1PJ4/ref=sr_1_2?crid=15TWQETKO1FC1&dib=eyJ2IjoiMSJ9.9wE0ZJHe7kH3KFc0FEkKq3rENFSdpEUwlN_FohVlcKqrMfqwRQTqDz3wkEZlcGo1oTmzIXE9HR80PDLijaGFx72BUqRjJvcMEYotg3snyJT_VXGH9DnzLQJZuL_1H9qi8bYiXZaSK9lNdQVOd3c8sjV6DjbS79DxcP-Bf5nS1JspNSEyw6JD4XFXx75lU1FTWdi68aePMdzh4jJPO27L5Q6hi0o8T7MmeP-Xaf0AYmBw7luDmgQAiRgM6otWYVF034htHBbm7aihN1dKhIGjLSsMn1nnK5vo3ZXHcIW9ujg.YTAiyA6PRkMHliaU5tdi2TLl0aTjEZNTVcFLKSfucmk&dib_tag=se&keywords=tokonole&qid=1759684788&sprefix=tokonol%2Caps%2C231&sr=8-2&th=1',
-      imageUrl: '/images/tools/burnishing-gum.png',
-    },
-    {
-      id: '5',
-      name: 'Seiwa Leather Adhesive',
-      description:
-        'Strong, easy to use, and dries clear - honestly one of the best glues for leathercraft.',
-      link: 'https://www.rmleathersupply.com/products/water-based-leather-glue-glue-spreader-really-strong-and-dries-clear?srsltid=AfmBOoq_op-2koKnNrHVkWsU5CZpsHL2UnNkT3R5_ow93ayi771LH2Fu&variant=1222680143',
-      imageUrl: '/images/tools/glue.png',
-    },
-  ];
+  const {
+    data: tools = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['tools'],
+    queryFn: toolsAPI.getAll,
+  });
 
   return (
     <div className="max-w-8xl mx-auto space-y-12">
