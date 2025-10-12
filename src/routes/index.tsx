@@ -11,14 +11,15 @@ function HomePage() {
     data: featuredProjects = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
-    queryKey: ['tools'],
+    queryKey: ['projects'],
     queryFn: projectsAPI.getAll,
   });
 
   return (
     <div className="space-y-16">
-      <div className="text-center space-y-6 pt-12 pb-4">
+      <div className="text-center space-y-6 pt-12 pb-6">
         <div className="space-y-6">
           <h1 className="text-5xl md:text-6xl font-bold text-stone-800 tracking-tight">
             Learning Leathercraft,
@@ -31,7 +32,7 @@ function HomePage() {
             here, just honest learning and plenty of mistakes.
           </p>
         </div>
-        <div className="flex gap-4 justify-center pt-2">
+        <div className="flex gap-4 justify-center">
           <Link
             to="/projects"
             className="px-8 py-3 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-semibold text-lg">
@@ -58,8 +59,47 @@ function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredProjects.slice(0,3).map((project) => (
+        <div className={`grid gap-8 ${
+          featuredProjects.length === 1 
+            ? 'grid-cols-1 md:max-w-md md:mx-auto' 
+            : featuredProjects.length === 2 
+            ? 'grid-cols-1 md:grid-cols-2 md:max-w-3xl md:mx-auto' 
+            : 'grid-cols-1 md:grid-cols-3'
+        }`}>
+          {isLoading ? (
+            <div className="col-span-full text-center py-16">
+              <div className="w-16 h-16 border-4 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-stone-600 text-lg mt-4">Loading projects...</p>
+            </div>
+          ) : error ? (
+            <div className="col-span-full text-center py-16">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                  <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-stone-800">Failed to Load Recent Projects</h2>
+                <p className="text-stone-600">There was an error loading recent projects. Please try again later.</p>
+                <button 
+                  onClick={() => refetch()} 
+                  className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
+                  Retry
+                </button>
+              </div>
+            </div>
+          ) : featuredProjects.length === 0 ? (
+            <div className="col-span-full text-center py-16">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-5xl">📂</span>
+                </div>
+                <h3 className="text-2xl font-bold text-stone-800">No Projects Yet</h3>
+                <p className="text-stone-600">Projects coming soon!</p>
+              </div>
+            </div>
+          ) : (
+            featuredProjects.slice(0,3).map((project) => (
             <Link
               key={project.id}
               to="/projects/$projectId"
@@ -103,7 +143,8 @@ function HomePage() {
                 </div>
               </div>
             </Link>
-          ))}
+          ))
+          )}
         </div>
 
         <div className="text-center pt-4">
