@@ -1,37 +1,23 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { projectsAPI } from '@/services/api';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 });
 
 function HomePage() {
-  const featuredProjects = [
-    {
-      id: '1',
-      title: 'Handcrafted Leather Wallet',
-      category: 'Wallets',
-      imageUrl: '',
-      excerpt: 'A bifold wallet with multiple card slots and clean edge work.',
-    },
-    {
-      id: '2',
-      title: 'Leather Messenger Bag',
-      category: 'Bags',
-      imageUrl: '',
-      excerpt: 'Custom messenger bag with adjustable strap and brass hardware.',
-    },
-    {
-      id: '3',
-      title: 'Classic Leather Belt',
-      category: 'Belts',
-      imageUrl: '',
-      excerpt: 'Hand-stitched belt with antique brass buckle.',
-    },
-  ];
+  const {
+    data: featuredProjects = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['tools'],
+    queryFn: projectsAPI.getAll,
+  });
 
   return (
     <div className="space-y-16">
-      {/* Hero Section */}
       <div className="text-center space-y-6 pt-12 pb-4">
         <div className="space-y-6">
           <h1 className="text-5xl md:text-6xl font-bold text-stone-800 tracking-tight">
@@ -73,16 +59,16 @@ function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredProjects.map((project) => (
+          {featuredProjects.slice(0,3).map((project) => (
             <Link
               key={project.id}
               to="/projects/$projectId"
               params={{ projectId: project.id }}
               className="group bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
               <div className="aspect-square bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
-                {project.imageUrl ?
+                {project.mainImage ?
                   <img
-                    src={project.imageUrl}
+                    src={project.mainImage}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
