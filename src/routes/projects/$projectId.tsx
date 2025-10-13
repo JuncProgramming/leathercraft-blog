@@ -1,5 +1,7 @@
-import type { Project } from '@/types';
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { projectsAPI } from '@/services/api';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/projects/$projectId')({
   component: ProjectDetailPage,
@@ -8,54 +10,44 @@ export const Route = createFileRoute('/projects/$projectId')({
 function ProjectDetailPage() {
   const { projectId } = Route.useParams();
 
-  const project: Project = {
-    id: projectId,
-    title: 'Handcrafted Leather Wallet',
-    category: 'Wallets',
-    date: 'March 15, 2025',
-    completionTime: '8 hours',
-    difficulty: 'Intermediate',
-    mainImage: '',
-    gallery: ['', '', ''],
-    description:
-      'This was one of my more ambitious projects - a bifold wallet with multiple card slots and a bill compartment. I wanted to challenge myself with more precise stitching and cleaner edge work than my previous attempts.',
-    process: [
-      {
-        title: 'Planning & Pattern',
-        content:
-          'Started by creating a paper template based on measurements from my daily wallet. Made sure to account for leather thickness when planning the card slots.',
-      },
-      {
-        title: 'Cutting & Prep',
-        content:
-          'Cut all pieces from 2-3oz vegetable-tanned leather. Spent extra time on edge beveling to get that professional look.',
-      },
-      {
-        title: 'Assembly',
-        content:
-          'Glued the card slot layers together first, then hand-stitched everything with waxed thread. The spacing took forever but was worth it.',
-      },
-      {
-        title: 'Finishing',
-        content:
-          'Burnished all edges with Tokonole and applied a light coat of leather conditioner. The edges came out surprisingly smooth!',
-      },
-    ],
-    materials: [
-      '2-3oz Vegetable Tanned Leather',
-      'Waxed Thread (0.8mm)',
-      'Edge Beveler',
-      'Stitching Chisels (3.85mm)',
-      'Tokonole Burnishing Gum',
-      'Leather Glue',
-    ],
-    lessons: [
-      'Card slots need to be slightly wider than you think - leather thickness adds up quickly',
-      'Burnishing edges before assembly makes the process much easier',
-      'Patience with stitching spacing really pays off in the final look',
-      'Using a stitching pony makes everything so much more consistent',
-    ],
-  };
+  const { data: project, isLoading, error } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: () => projectsAPI.getById(projectId),
+  });
+
+  if (isLoading) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-stone-600 text-lg">Loading project...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !project) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-stone-800">Project Not Found</h2>
+          <p className="text-stone-600">
+            {error ? "There was an error loading this project." : "This project doesn't exist or has been removed."}
+          </p>
+          <Link 
+            to="/projects" 
+            className="inline-block px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-8xl mx-auto space-y-12">
