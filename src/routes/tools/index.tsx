@@ -11,10 +11,43 @@ function ToolsPage() {
     data: tools = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['tools'],
     queryFn: toolsAPI.getAll,
   });
+
+  if (isLoading) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-stone-600 text-lg">Loading tools...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-stone-800">Failed to Load Tools</h2>
+          <p className="text-stone-600">There was an error loading the tools. Please try again later.</p>
+          <button 
+            onClick={() => refetch()} 
+            className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-8xl mx-auto space-y-12">
@@ -31,7 +64,20 @@ function ToolsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {tools.map((tool) => (
+        {tools.length === 0 ? (
+          <div className="col-span-full text-center py-16">
+            <div className="max-w-md mx-auto space-y-4">
+              <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-5xl">🔧</span>
+              </div>
+              <h3 className="text-2xl font-bold text-stone-800">No Tools Yet</h3>
+              <p className="text-stone-600">
+                Tool recommendations will be added soon. Check back later!
+              </p>
+            </div>
+          </div>
+        ) : (
+          tools.map((tool) => (
           <div
             key={tool.id}
             className="group bg-white rounded-lg overflow-hidden hover:shadow transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
@@ -66,7 +112,8 @@ function ToolsPage() {
               </div>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
       <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4 mt-12">
         <h2 className="text-3xl font-bold">
