@@ -14,6 +14,7 @@ function ProjectsPage() {
     data: projects = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsAPI.getAll,
@@ -23,6 +24,38 @@ function ProjectsPage() {
     selectedCategory === 'All' ? projects : (
       projects.filter((project) => project.category === selectedCategory)
     );
+
+  if (isLoading) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-stone-600 text-lg">Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-stone-800">Failed to Load Projects</h2>
+          <p className="text-stone-600">There was an error loading the projects. Please try again later.</p>
+          <button 
+            onClick={() => refetch()} 
+            className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-8xl mx-auto space-y-12">
@@ -58,8 +91,34 @@ function ProjectsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {filteredProjects.map((project) => (
+      <div className={`grid gap-8 ${
+        filteredProjects.length === 1 
+          ? 'grid-cols-1 md:max-w-2xl md:mx-auto' 
+          : 'grid-cols-1 md:grid-cols-2'
+      }`}>
+        {filteredProjects.length === 0 ? (
+          <div className="col-span-full text-center py-16">
+            <div className="max-w-md mx-auto space-y-4">
+              <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-5xl">📂</span>
+              </div>
+              <h3 className="text-2xl font-bold text-stone-800">No Projects Found</h3>
+              <p className="text-stone-600">
+                {selectedCategory === 'All' 
+                  ? "There are no projects yet. Check back soon!" 
+                  : `No projects in the "${selectedCategory}" category. Try selecting a different category.`}
+              </p>
+              {selectedCategory !== 'All' && (
+                <button
+                  onClick={() => setSelectedCategory('All')}
+                  className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
+                  View All Projects
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          filteredProjects.map((project) => (
           <div
             key={project.id}
             className="group bg-white rounded-lg overflow-hidden hover:shadow transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
@@ -117,7 +176,8 @@ function ProjectsPage() {
               </div>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
 
       <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4">
