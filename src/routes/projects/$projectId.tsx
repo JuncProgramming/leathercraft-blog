@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { projectsAPI } from '@/services/api';
-import { useState } from 'react';
+import GalleryCarousel from '@/components/GalleryCarousel';
 
 export const Route = createFileRoute('/projects/$projectId')({
   component: ProjectDetailPage,
@@ -154,22 +154,7 @@ function ProjectDetailPage() {
       </div>
 
       {project.gallery && project.gallery.filter((img) => img).length > 0 && (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-stone-800">Gallery</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {project.gallery.filter((img) => img).map((image, index) => (
-              <div
-                key={index}
-                className="aspect-square bg-gradient-to-br from-stone-100 to-stone-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                <img
-                  src={image}
-                  alt={`${project.title} - Image ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <GalleryCarousel images={project.gallery.filter((img) => img)} projectTitle={project.title} />
       )}
 
       <div className="grid md:grid-cols-2 gap-8">
