@@ -7,15 +7,15 @@ export const Route = createFileRoute('/')({
 });
 
 function HomePage() {
-  const {
-    data: featuredProjects = [],
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['projects'],
-    queryFn: projectsAPI.getAll,
+  const PAGE = 1;
+  const ITEMS_TO_SHOW = 3;
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['featured-projects'],
+    queryFn: () => projectsAPI.getAll(PAGE, ITEMS_TO_SHOW),
   });
+
+  const featuredProjects = data?.projects || [];
 
   return (
     <div className="space-y-16">
@@ -59,95 +59,110 @@ function HomePage() {
           </p>
         </div>
 
-        <div className={`grid gap-8 ${
-          featuredProjects.length === 1 
-            ? 'grid-cols-1 md:max-w-md md:mx-auto' 
-            : featuredProjects.length === 2 
-            ? 'grid-cols-1 md:grid-cols-2 md:max-w-3xl md:mx-auto' 
+        <div
+          className={`grid gap-8 ${
+            featuredProjects.length === 1 ? 'grid-cols-1 md:max-w-md md:mx-auto'
+            : featuredProjects.length === 2 ?
+              'grid-cols-1 md:grid-cols-2 md:max-w-3xl md:mx-auto'
             : 'grid-cols-1 md:grid-cols-3'
-        }`}>
-          {isLoading ? (
+          }`}>
+          {isLoading ?
             <div className="col-span-full text-center py-16">
               <div className="w-16 h-16 border-4 border-stone-800 border-t-transparent rounded-full animate-spin mx-auto"></div>
               <p className="text-stone-600 text-lg mt-4">Loading projects...</p>
             </div>
-          ) : error ? (
+          : error ?
             <div className="col-span-full text-center py-16">
               <div className="max-w-md mx-auto space-y-4">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-                  <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-8 h-8 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-stone-800">Failed to Load Recent Projects</h2>
-                <p className="text-stone-600">There was an error loading recent projects. Please try again later.</p>
-                <button 
-                  onClick={() => refetch()} 
+                <h2 className="text-2xl font-bold text-stone-800">
+                  Failed to Load Recent Projects
+                </h2>
+                <p className="text-stone-600">
+                  There was an error loading recent projects. Please try again
+                  later.
+                </p>
+                <button
+                  onClick={() => refetch()}
                   className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
                   Retry
                 </button>
               </div>
             </div>
-          ) : featuredProjects.length === 0 ? (
+          : featuredProjects.length === 0 ?
             <div className="col-span-full text-center py-16">
               <div className="max-w-md mx-auto space-y-4">
                 <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
                   <span className="text-5xl">📂</span>
                 </div>
-                <h3 className="text-2xl font-bold text-stone-800">No Projects Yet</h3>
+                <h3 className="text-2xl font-bold text-stone-800">
+                  No Projects Yet
+                </h3>
                 <p className="text-stone-600">Projects coming soon!</p>
               </div>
             </div>
-          ) : (
-            featuredProjects.slice(0,3).map((project) => (
-            <Link
-              key={project.id}
-              to="/projects/$projectId"
-              params={{ projectId: project.id }}
-              className="group bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
-              <div className="aspect-square bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
-                {project.mainImage ?
-                  <img
-                    src={project.mainImage}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                : <span className="text-7xl">🧳</span>}
-                <div className="absolute top-3 right-3 bg-stone-800 text-white px-3 py-1 rounded-full text-xs font-medium">
-                  {project.category}
+          : featuredProjects.map((project) => (
+              <Link
+                key={project.id}
+                to="/projects/$projectId"
+                params={{ projectId: project.id }}
+                className="group bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
+                <div className="aspect-square bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
+                  {project.mainImage ?
+                    <img
+                      src={project.mainImage}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  : <span className="text-7xl">🧳</span>}
+                  <div className="absolute top-3 right-3 bg-stone-800 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    {project.category}
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-700 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-stone-600 line-clamp-2">
-                  {project.excerpt}
-                </p>
-                <div className="mt-auto pt-4">
-                  <span className="text-stone-800 font-semibold text-sm flex items-center gap-2 group/btn">
-                    View Project
-                    <svg
-                      className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </span>
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-700 transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-stone-600 line-clamp-2">
+                    {project.excerpt}
+                  </p>
+                  <div className="mt-auto pt-4">
+                    <span className="text-stone-800 font-semibold text-sm flex items-center gap-2 group/btn">
+                      View Project
+                      <svg
+                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))
-          )}
+              </Link>
+            ))
+          }
         </div>
 
-        <div className="text-center pt-4">
+        <div className="text-center">
           <Link
             to="/projects"
             className="inline-flex items-center gap-2 text-stone-800 hover:text-stone-600 transition-colors font-semibold">
