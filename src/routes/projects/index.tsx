@@ -9,16 +9,16 @@ export const Route = createFileRoute('/projects/')({
 
 function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
-  const {
-    data: projects = [],
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['projects'],
-    queryFn: projectsAPI.getAll,
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['projects', currentPage, ITEMS_PER_PAGE],
+    queryFn: () => projectsAPI.getAll(currentPage, ITEMS_PER_PAGE),
   });
+
+  const projects = data?.projects || [];
+  const totalPages = data?.totalPages || 0;
 
   const filteredProjects =
     selectedCategory === 'All' ? projects : (
@@ -41,14 +41,27 @@ function ProjectsPage() {
       <div className="max-w-8xl mx-auto flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-4 max-w-md">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-8 h-8 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-stone-800">Failed to Load Projects</h2>
-          <p className="text-stone-600">There was an error loading the projects. Please try again later.</p>
-          <button 
-            onClick={() => refetch()} 
+          <h2 className="text-2xl font-bold text-stone-800">
+            Failed to Load Projects
+          </h2>
+          <p className="text-stone-600">
+            There was an error loading the projects. Please try again later.
+          </p>
+          <button
+            onClick={() => refetch()}
             className="px-6 py-2 bg-stone-800 text-white rounded-md hover:bg-stone-700 transition font-medium">
             Retry
           </button>
@@ -91,22 +104,26 @@ function ProjectsPage() {
         </div>
       </div>
 
-      <div className={`grid gap-8 ${
-        filteredProjects.length === 1 
-          ? 'grid-cols-1 md:max-w-2xl md:mx-auto' 
+      <div
+        className={`grid gap-8 ${
+          filteredProjects.length === 1 ?
+            'grid-cols-1 md:max-w-2xl md:mx-auto'
           : 'grid-cols-1 md:grid-cols-2'
-      }`}>
-        {filteredProjects.length === 0 ? (
+        }`}>
+        {filteredProjects.length === 0 ?
           <div className="col-span-full text-center py-16">
             <div className="max-w-md mx-auto space-y-4">
               <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-5xl">📂</span>
               </div>
-              <h3 className="text-2xl font-bold text-stone-800">No Projects Found</h3>
+              <h3 className="text-2xl font-bold text-stone-800">
+                No Projects Found
+              </h3>
               <p className="text-stone-600">
-                {selectedCategory === 'All' 
-                  ? "There are no projects yet. Check back soon!" 
-                  : `No projects in the "${selectedCategory}" category. Try selecting a different category.`}
+                {selectedCategory === 'All' ?
+                  'There are no projects yet. Check back soon!'
+                : `No projects in the "${selectedCategory}" category. Try selecting a different category.`
+                }
               </p>
               {selectedCategory !== 'All' && (
                 <button
@@ -117,68 +134,133 @@ function ProjectsPage() {
               )}
             </div>
           </div>
-        ) : (
-          filteredProjects.map((project) => (
-          <div
-            key={project.id}
-            className="group bg-white rounded-lg overflow-hidden hover:shadow transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
-            <div className="aspect-video bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
-              {project.mainImage ?
-                <img
-                  src={project.mainImage}
-                  alt={project.title || 'Project image'}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              : <span className="text-7xl">🧳</span>}
+        : filteredProjects.map((project) => (
+            <div
+              key={project.id}
+              className="group bg-white rounded-lg overflow-hidden hover:shadow transition-all duration-300 border border-stone-200 hover:border-stone-800 flex flex-col">
+              <div className="aspect-video bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden relative">
+                {project.mainImage ?
+                  <img
+                    src={project.mainImage}
+                    alt={project.title || 'Project image'}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                : <span className="text-7xl">🧳</span>}
 
-              <div className="absolute top-3 right-3 bg-stone-800 text-white px-3 py-1 rounded-full text-xs font-medium">
-                {project.category}
+                <div className="absolute top-3 right-3 bg-stone-800 text-white px-3 py-1 rounded-full text-xs font-medium">
+                  {project.category}
+                </div>
               </div>
-            </div>
 
-            <div className="p-6 space-y-3 flex flex-col flex-1">
-              <div className="space-y-2 flex-1">
-                {project.date && (
-                  <p className="text-xs text-stone-500 uppercase tracking-wider">
-                    {project.date}
+              <div className="p-6 space-y-3 flex flex-col flex-1">
+                <div className="space-y-2 flex-1">
+                  {project.date && (
+                    <p className="text-xs text-stone-500 uppercase tracking-wider">
+                      {project.date}
+                    </p>
+                  )}
+
+                  <h3 className="text-xl font-bold text-stone-800 line-clamp-2 group-hover:text-stone-700 transition-colors">
+                    {project.title || 'Project Title'}
+                  </h3>
+
+                  <p className="text-sm text-stone-600 line-clamp-4">
+                    {project.description ||
+                      'Share the story behind this project - what inspired it, challenges you faced, and what you learned along the way.'}
                   </p>
-                )}
+                </div>
 
-                <h3 className="text-xl font-bold text-stone-800 line-clamp-2 group-hover:text-stone-700 transition-colors">
-                  {project.title || 'Project Title'}
-                </h3>
-
-                <p className="text-sm text-stone-600 line-clamp-4">
-                  {project.description ||
-                    'Share the story behind this project - what inspired it, challenges you faced, and what you learned along the way.'}
-                </p>
-              </div>
-
-              <div className="pt-4">
-                <Link
-                  to="/projects/$projectId"
-                  params={{ projectId: project.id }}
-                  className="text-stone-800 font-semibold hover:text-stone-600 transition-colors text-sm flex items-center gap-2 group/btn cursor-pointer">
-                  View Details
-                  <svg
-                    className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
+                <div className="pt-4">
+                  <Link
+                    to="/projects/$projectId"
+                    params={{ projectId: project.id }}
+                    className="text-stone-800 font-semibold hover:text-stone-600 transition-colors text-sm flex items-center gap-2 group/btn cursor-pointer">
+                    View Details
+                    <svg
+                      className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))
-        )}
+          ))
+        }
       </div>
+
+      {totalPages > 0 && (
+        <div className="flex items-center justify-center gap-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className={`w-10 h-10 rounded-lg font-medium transition-all flex items-center justify-center ${
+              currentPage === 1 ?
+                'bg-stone-200 text-stone-400 cursor-not-allowed'
+              : 'bg-stone-800 text-white hover:bg-stone-700'
+            }`}
+            aria-label="Previous page">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 rounded-lg font-medium transition-all ${
+                  page === currentPage ?
+                    'bg-stone-800 text-white'
+                  : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                }`}>
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+            }
+            disabled={currentPage === totalPages}
+            className={`w-10 h-10 rounded-lg font-medium transition-all flex items-center justify-center ${
+              currentPage === totalPages ?
+                'bg-stone-200 text-stone-400 cursor-not-allowed'
+              : 'bg-stone-800 text-white hover:bg-stone-700'
+            }`}
+            aria-label="Next page">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4">
         <h2 className="text-3xl font-bold">Curious About My Tools?</h2>
