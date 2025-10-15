@@ -10,12 +10,17 @@ const api = axios.create({
 });
 
 export const projectsAPI = {
-  async getAll(): Promise<Project[]> {
+  async getAll(
+    page: number,
+    pageSize: number
+  ): Promise<{ projects: Project[]; totalPages: number }> {
     const response = await api.get(
-      '/projects?populate=*'
+      `/projects?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
-    return response.data.data.map((item: any) => ({
+    const meta = response.data.meta;
+
+    const projects = response.data.data.map((item: any) => ({
       id: item.documentId,
       title: item.title,
       category: item.category,
@@ -37,12 +42,15 @@ export const projectsAPI = {
       materials: item.materials?.split('\n').filter(Boolean) || [],
       lessons: item.lessons?.split('\n').filter(Boolean) || [],
     }));
+
+    return {
+      projects: projects,
+      totalPages: meta.pagination.pageCount,
+    };
   },
 
   async getById(id: string): Promise<Project> {
-    const response = await api.get(
-      `/projects/${id}?populate=*`
-    );
+    const response = await api.get(`/projects/${id}?populate=*`);
 
     const item = response.data.data;
     return {
