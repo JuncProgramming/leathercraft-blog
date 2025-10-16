@@ -196,7 +196,7 @@ function ProjectsPage() {
         }
       </div>
 
-      {totalPages > 0 && (
+      {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}

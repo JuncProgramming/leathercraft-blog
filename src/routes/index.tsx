@@ -19,7 +19,7 @@ function HomePage() {
 
   return (
     <div className="space-y-16">
-      <div className="text-center space-y-6 pt-12 pb-6">
+      <div className="text-center space-y-6 pt-12 pb-4">
         <div className="space-y-6">
           <h1 className="text-5xl md:text-6xl font-bold text-stone-800 tracking-tight">
             Learning Leathercraft,
@@ -46,7 +46,7 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="border-t-2 border-stone-200"></div>
+      <div className="border-t-2 border-stone-800/20"></div>
 
       <div className="space-y-16">
         <div className="text-center space-y-6">
@@ -92,8 +92,7 @@ function HomePage() {
                   Failed to Load Recent Projects
                 </h2>
                 <p className="text-stone-600">
-                  There was an error loading recent projects. Please try again
-                  later.
+                  There was an error loading recent projects. Please try again later.
                 </p>
                 <button
                   onClick={() => refetch()}
@@ -183,7 +182,7 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="border-t-2 border-stone-200"></div>
+      <div className="border-t-2 border-stone-800/20"></div>
 
       <div className="bg-stone-50 rounded-lg p-12 border border-stone-200">
         <div className="max-w-3xl mx-auto text-center space-y-6">
@@ -214,7 +213,7 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="border-t-2 border-stone-200"></div>
+      <div className="border-t-2 border-stone-800/20"></div>
 
       <div className="bg-stone-800 text-white rounded-lg p-12 text-center space-y-4">
         <h2 className="text-3xl font-bold">Ready to Start Exploring?</h2>
