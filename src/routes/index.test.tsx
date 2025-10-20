@@ -36,10 +36,46 @@ describe('Homepage Smoke Test', () => {
       )
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('link', { name: /View My Projects/i })
-    ).toBeInTheDocument();
     const aboutLinks = screen.getAllByRole('link', { name: /About Me/i });
-    expect(aboutLinks.length).toBeGreaterThan(0);
+    expect(aboutLinks).toHaveLength(2);
+    aboutLinks.forEach((link) => {
+      expect(link).toHaveAttribute('href', '/about');
+    });
+
+    const projectsLinks = screen.getAllByRole('link', { name: /Projects/i });
+    expect(projectsLinks).toHaveLength(5);
+    projectsLinks.forEach((link) => {
+      expect(link).toHaveAttribute('href', '/projects');
+    });
+
+    const toolsLinks = screen.getAllByRole('link', { name: /Tools/i });
+    expect(toolsLinks).toHaveLength(3);
+    toolsLinks.forEach((link) => {
+      expect(link).toHaveAttribute('href', '/tools');
+    });
+
+    const navElements = screen.getAllByRole('navigation');
+    expect(navElements).toHaveLength(2);
+
+    expect(screen.getByRole('main')).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: /Recent Projects/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: /Why I Started This Journey/i })
+    ).toBeInTheDocument();
+
+    const Images = screen.queryAllByRole('img');
+    Images.forEach((image) => {
+      expect(image).toBeInTheDocument()
+    });
+
+    const emailLink = screen.getByRole('link', {
+      name: /juncmakes@gmail.com/i,
+    });
+    expect(emailLink).toBeInTheDocument();
+    expect(emailLink).toHaveAttribute('href', 'mailto:juncmakes@gmail.com');
   });
 });
