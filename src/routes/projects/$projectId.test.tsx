@@ -9,8 +9,8 @@ import {
 import '@testing-library/jest-dom/vitest';
 import { routeTree } from '@/routeTree.gen';
 
-describe('Tools Page Smoke Test', () => {
-  it('should render the tools page without crashing', async () => {
+describe('Project Detail Page Smoke Test', () => {
+  it('should render the project detail page without crashing', async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -20,7 +20,7 @@ describe('Tools Page Smoke Test', () => {
     });
 
     const memoryHistory = createMemoryHistory({
-      initialEntries: ['/tools'],
+      initialEntries: ['/projects/test-project-id'],
     });
 
     const router = createRouter({
@@ -38,16 +38,19 @@ describe('Tools Page Smoke Test', () => {
     await waitFor(() => {
       expect(
         screen.getByRole('heading', {
-          name: /Failed to Load Tools/i,
+          name: /Project Not Found/i,
         })
       ).toBeInTheDocument();
     });
 
     expect(
-      screen.getByText(/There was an error loading the tools/i)
+      screen.getByText(/There was an error loading this project/i)
     ).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
+    const backLinks = screen.getAllByRole('link', {
+      name: /Back to Projects/i,
+    });
+    expect(backLinks.length).toBeGreaterThan(0);
 
     const navElements = screen.getAllByRole('navigation');
     expect(navElements).toHaveLength(2);

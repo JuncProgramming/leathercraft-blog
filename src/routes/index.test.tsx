@@ -67,9 +67,9 @@ describe('Homepage Smoke Test', () => {
       screen.getByRole('heading', { name: /Why I Started This Journey/i })
     ).toBeInTheDocument();
 
-    const Images = screen.queryAllByRole('img');
-    Images.forEach((image) => {
-      expect(image).toBeInTheDocument()
+    const images = screen.queryAllByRole('img');
+    images.forEach((image) => {
+      expect(image).toBeInTheDocument();
     });
 
     const emailLink = screen.getByRole('link', {

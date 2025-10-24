@@ -59,9 +59,15 @@ describe('Projects Page Smoke Test', () => {
     const headings = screen.getAllByRole('heading', { level: 1 });
     expect(headings).toHaveLength(1);
 
-    const Images = screen.queryAllByRole('img');
-    Images.forEach((image) => {
+    const images = screen.queryAllByRole('img');
+    images.forEach((image) => {
       expect(image).toHaveAttribute('alt');
     });
+
+    const emailLink = screen.getByRole('link', {
+      name: /juncmakes@gmail.com/i,
+    });
+    expect(emailLink).toBeInTheDocument();
+    expect(emailLink).toHaveAttribute('href', 'mailto:juncmakes@gmail.com');
   });
 });
