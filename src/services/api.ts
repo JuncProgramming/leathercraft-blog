@@ -2,8 +2,6 @@ import axios from 'axios';
 import type { Project, Tool } from '@/types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:1337/api';
-const BASE_URL =
-  import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:1337';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -27,10 +25,10 @@ export const projectsAPI = {
       date: item.date,
       completionTime: item.completionTime,
       difficulty: item.difficulty,
-      mainImage: item.mainImage ? `${BASE_URL}${item.mainImage.url}` : '',
+      mainImage: item.mainImage ? `${item.mainImage.url}` : '',
       gallery:
         item.gallery
-          ?.map((img: any) => (img.url ? `${BASE_URL}${img.url}` : ''))
+          ?.map((img: any) => (img.url ? `${img.url}` : ''))
           .filter(Boolean) || [],
       description: item.description,
       excerpt: item.excerpt,
@@ -60,10 +58,10 @@ export const projectsAPI = {
       date: item.date,
       completionTime: item.completionTime,
       difficulty: item.difficulty,
-      mainImage: item.mainImage ? `${BASE_URL}${item.mainImage.url}` : '',
+      mainImage: item.mainImage ? `${item.mainImage.url}` : '',
       gallery:
         item.gallery
-          ?.map((img: any) => (img.url ? `${BASE_URL}${img.url}` : ''))
+          ?.map((img: any) => (img.url ? `${img.url}` : ''))
           .filter(Boolean) || [],
       description: item.description,
       excerpt: item.excerpt,
@@ -87,7 +85,7 @@ export const toolsAPI = {
       name: item.name,
       description: item.description,
       link: item.link || '',
-      imageUrl: item.image ? `${BASE_URL}${item.image.url}` : '',
+      imageUrl: item.image ? `${item.image.url}` : '',
     }));
   },
 };
